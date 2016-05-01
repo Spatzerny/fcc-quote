@@ -1,0 +1,80 @@
+body {
+	background-color: #a7f;
+}
+
+.wrapper {
+	margin: 20vh auto;
+	max-width: 360px;
+	position: relative;
+}
+
+.round {
+	/* mostly to mangle the button stylings */
+	vertical-align: top;
+	box-sizing: border-box;
+	border: none;
+	border-bottom: 4px solid #9C2123;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	background-color: #DE2C2F;
+	outline: none;
+	position: absolute;
+}
+
+.screw {
+	left: 0;
+	top: -30px;
+}
+
+.button {
+	right: 0;
+	top: -30px;
+}
+
+.button:hover {
+	background-color: #F12;
+}
+
+.button:active {
+	border-bottom: 2px solid #9C2123;
+	margin-top: 1px;
+}
+
+.slot {
+	padding: 2px;
+	border-radius: 4px;
+	margin: 0 auto;
+	display: block;
+	width: 220px;
+	height: 0px;
+	background-color: #222;
+}
+
+.quote-wrapper {
+	margin: 0;
+	padding: 0 20px;
+	border-bottom: 2px dotted #aaa;
+	background-color: #fff;
+	overflow: hidden;
+}
+
+.quote-wrapper:last-child {
+	border-bottom: none;
+}
+
+.quote, .author {
+	color: #333;
+	font-family: Raleway;
+	margin: 0;
+}
+
+.quote {
+}
+
+.author {
+	font-weight: 600;
+	text-align: right;
+	margin: 20px 0;
+	font-size: 12px;
+}
