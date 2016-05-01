@@ -26,11 +26,8 @@ $('document').ready(function() {
 				});
 				
 				$('.slot').animate({
-					padding: '5px 3px'
-				}, 200);
-				
-				
-				
+					padding: '6px 3px 6px 3px'
+				}, 200);				
 				
 			});
 		};
