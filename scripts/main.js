@@ -20,15 +20,7 @@ $('document').ready(function() {
 					marginTop: '20px'
 				}, firstQuoteHeight * 10, 'linear', function() {
 					ready = true;
-					$('.slot').animate({
-					padding: '2px 2px'
-				}, 200);
-				});
-				
-				$('.slot').animate({
-					padding: '6px 3px 6px 3px'
-				}, 200);				
-				
+				});				
 			});
 		};
 	});

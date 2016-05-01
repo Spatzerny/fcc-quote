@@ -3,37 +3,24 @@ body {
 }
 
 .wrapper {
-	margin: 20vh auto;
+	margin: 0 auto;
 	max-width: 360px;
 	position: relative;
 }
 
-.round {
-	/* mostly to mangle the button stylings */
-	vertical-align: top;
+.button {
+	color: #fff;
+	font-family: Raleway;
+	margin: 20px auto;
+	display: block;
 	box-sizing: border-box;
 	border: none;
 	border-bottom: 4px solid #9C2123;
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
+	border-radius: 4px;
+	width: 224px;
+	height: 50px;
 	background-color: #DE2C2F;
 	outline: none;
-	position: absolute;
-}
-
-.screw {
-	left: 0;
-	top: -30px;
-	background-image: url(../images/screw.jpg);
-	background-size: 170%;
-	background-position: center;
-	border-bottom: 4px solid #333;
-}
-
-.button {
-	right: 0;
-	top: -30px;
 }
 
 .button:hover {
@@ -42,11 +29,12 @@ body {
 
 .button:active {
 	border-bottom: 2px solid #9C2123;
-	margin-top: 1px;
+	height: 48px;
+	margin-top: 22px;
 }
 
 .slot {
-	padding: 2px;
+	padding: 3px;
 	border-radius: 4px;
 	margin: 0 auto;
 	display: block;
