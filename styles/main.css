@@ -8,27 +8,35 @@ body {
 
 .wrapper {
 	margin: 0 auto;
-	max-width: 360px;
-	position: relative;
+	width: 260px;
 }
 
 .button {
 	color: #fff;
-	font-family: Raleway;
+	font-family: Raleway, Lato, Roboto, sans-serif;
 	margin: 20px auto;
 	display: block;
-	box-sizing: border-box;
 	border: none;
 	border-bottom: 4px solid #9C2123;
 	border-radius: 4px;
 	width: 224px;
 	height: 50px;
 	background-color: #DE2C2F;
+	
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+	user-select: none;
+}
+
+.button:focus {
 	outline: none;
 }
 
 .button:hover {
-	background-color: #F12;
+	background-color: #FF1122;
 }
 
 .button:active {
@@ -43,7 +51,7 @@ body {
 	margin: 0 auto;
 	display: block;
 	width: 220px;
-	height: 0px;
+	height: 0;
 	background-color: #555;
 	position: relative;
 }
@@ -51,22 +59,27 @@ body {
 .quote-wrapper {
 	margin: 0;
 	padding: 0 20px;
-	border-bottom: 2px dotted #ade;
+	border-bottom: none;
 	background-color: #FFF6aa;
 	overflow: hidden;
+	cursor: default;
+	
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+	user-select: none;
 }
 
-.quote-wrapper:last-child {
-	border-bottom: none;
+#printer .quote-wrapper {
+	border-bottom: 2px dotted #ade;
 }
 
 .quote, .author {
 	color: #333;
-	font-family: Raleway;
+	font-family: Raleway, Lato, Roboto, sans-serif;
 	margin: 0;
-}
-
-.quote {
 }
 
 .author {
