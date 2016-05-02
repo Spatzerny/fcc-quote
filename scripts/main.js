@@ -32,6 +32,8 @@ $('document').ready(function() {
 	
 	//drag and drop START
 	$('body').on('mousedown', '.draggable', function(downEvent) {
+		event.preventDefault();
+		event.stopPropagation();
 		var thisElement = $(this); 
 		var xOffset = thisElement.offset().left - downEvent.pageX + thisElement.width()/2;
 		var yOffset = thisElement.offset().top - downEvent.pageY + thisElement.height()/2;
@@ -57,6 +59,34 @@ $('document').ready(function() {
 			$('body').off('mousemove');
 		});
 	});
+	//drag and drop MOBILE
+	$('body').on('touchstart', '.draggable', function(downEvent) {
+		console.log(downEvent.originalEvent.changedTouches[0].pageX);
+		downEvent.preventDefault();
+		var thisElement = $(this); 
+		var xOffset = thisElement.offset().left - downEvent.originalEvent.changedTouches[0].pageX + thisElement.width()/2;
+		var yOffset = thisElement.offset().top - downEvent.originalEvent.changedTouches[0].pageY + thisElement.height()/2;
+
+		thisElement.css({
+			position: 'absolute',
+			width: thisElement.width(),
+			//change the left/top on start to begin 'in hand'
+			left: downEvent.originalEvent.changedTouches[0].pageX - thisElement.width()/2 + xOffset,
+			top: downEvent.originalEvent.changedTouches[0].pageY - thisElement.height()/2 + yOffset
+		});
+
+		thisElement.appendTo('body');
+
+		$('body').on('touchmove', (function(moveEvent) {
+			thisElement.css({
+				left: moveEvent.originalEvent.changedTouches[0].pageX - thisElement.width()/2 + xOffset,
+				top: moveEvent.originalEvent.changedTouches[0].pageY - thisElement.height()/2 + yOffset
+			});
+		}));
+
+		$('body').on('touchend',function(){
+			$('body').off('touchmove');
+		});
+	});
 	//drag and drop END
-	
 });
