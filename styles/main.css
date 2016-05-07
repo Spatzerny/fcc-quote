@@ -7,18 +7,14 @@ body {
 	background-color: #ade;
 }
 
-.wrapper {
+/* PRINTER */
+
+.printer {
 	margin: 0 auto;
 	width: 260px;
 }
 
 .printer-slot {
-	position: relative;
-}
-
-.box-slot {
-	top: 42%;
-	border-radius: 4px;
 	position: relative;
 }
 
@@ -30,7 +26,10 @@ body {
 	display: block;
 	height: 0;
 	width: 220px;
+	overflow: visible;
 }
+
+/* BUTTON */
 
 .button {
 	color: #fff;
@@ -66,7 +65,9 @@ body {
 	margin-top: 22px;
 }
 
-.quote-wrapper {
+/* QUOTE SHEET */
+
+.quote-sheet {
 	margin: 0;
 	padding: 0 20px;
 	border-bottom: none;
@@ -100,22 +101,33 @@ body {
 	font-size: 0.75em;
 }
 
-/* BOX STYLE */
+/* BOX */
+/* main .slot style in PRINTER */
 
 .box {
+	position: absolute;
 	background-color: #17a;
 	width: 260px;
 	height: 100px;
-	overflow: auto;
+	overflow: visible;
 	border-radius: 4px;
 }
 
 .box-top {
 	background-color: #39c;
 	height: 46px;
-	overflow: auto;
+	overflow: visible;
+	position: relative;
+	border-radius: 4px;
+}
+
+.box-slot {
+	top: 42%;
+	border-radius: 4px;
 	position: relative;
 }
+
+/* TWITTER BOX */
 
 .box-twitter {
 	background-image: url("http://factoledo.org/wp-content/uploads/2015/02/Twitter_bird_logo_2012.svg_.png");
@@ -127,4 +139,18 @@ body {
 
 .box-twitter .box-top {
 	background-color: #2AC9FF;
+}
+
+/* BIN BOX */
+
+.box-bin {
+	background-image: url("http://factoledo.org/wp-content/uploads/2015/02/Twitter_bird_logo_2012.svg_.png");
+	background-size: 16%;
+	background-repeat: no-repeat;
+	background-position: bottom 10px right 10px;
+	background-color: #777;
+}
+
+.box-bin .box-top {
+	background-color: #999;
 }

@@ -1,77 +1,87 @@
 /*TODO
-print out if api call fails
+highlighting for box input
+social media functionality
+starting positions of boxes
+change cursor on movement (to hand?)
+diode for printer availibility?
 DRY drag and drop desktop and mobile
+personal info
 */
 
-function isNearBox(quoteSheet) {
+function makeSheet(main, sub) {
+	return $('<section class="quote-sheet"><p class="quote">'
+					+ main
+					+ '</p><p class="author">'
+					+ sub
+					+ '</p></section>');
+}
+
+function isNearBox(sheet) {
 	var radius = 10;
-	var quoteSheetX = quoteSheet.offset().left;
-	var quoteSheetY = quoteSheet.offset().top + quoteSheet.height();
+	var sheetX = sheet.offset().left;
+	var sheetY = sheet.offset().top + sheet.height();
 	
-	var nearbyBox = $('.box').filter(function() {
+	var nearBox = $('.box').filter(function() {
 		var boxX = $(this).find('.box-slot').offset().left;
 		var boxY = $(this).find('.box-slot').offset().top;
 		
-		if (quoteSheetX - boxX < radius &&
-				quoteSheetY - boxY < radius &&
-				quoteSheetX - boxX > -radius &&
-				quoteSheetY - boxY > -radius) {
+	if (sheet.hasClass('paper')) {
+		
+	}
+		
+	if (Math.abs(sheetX - boxX) < radius && Math.abs(sheetY - boxY) < radius) {
 			return true;
 		} else {
 			return false;
 		}
 	}).first();
 	
-	if (nearbyBox.length === 0) {
+	if (nearBox.length === 0) {
 		return false;
 	} else {
-		return nearbyBox;
-	}
+		return nearBox;
+	};
 };
 
 function makeQuoteSheet(json) {
-	if (!json.quoteAuthor) {json.quoteAuthor = 'Anonymous'}; 
-	return $('<section class="quote-wrapper"><p class="quote">'
+	if (!json.quoteAuthor) {
+		json.quoteAuthor = 'Anonymous'
+	}; 
+	return $('<section class="quote-sheet"><p class="quote">'
 					+ json.quoteText + '</p><p class="author">'
 					+ json.quoteAuthor + '</p></section>')
 }
 
 $('document').ready(function() {
-	var apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=jsonp&jsonp=?';
-	var printerReady = true;
-	var printedQuote;
-	var printedQuoteHeight;
 	
-	//BUTTON
+	//PRINTER && PRINTER BUTTON
 	$('#btn-go').click(function() {
-		if (printerReady) {
-			printerReady = false;
-			$.getJSON(apiUrl, function(json) {
-				
-				makeQuoteSheet(json).prependTo($('#printer'));
-				
-				//this is all for the specific animation (same speed regardless of element height)
-				printedQuote = $('.quote-wrapper:first-child');
-				printedQuoteHeight = parseInt(printedQuote.css('height'));
-				printedQuote.find('.quote').css('margin-top', -printedQuoteHeight - 10);
-				printedQuote.find('.quote').animate({
+		var apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=jsonp&jsonp=?';
+		var printReady = true;
+		var printSheet;
+		var printSheetHeight;
+		
+		if (printReady) {
+			printReady = false;
+			$.getJSON(apiUrl, function(json){
+				if (!json.quoteAuthor) {
+					json.quoteAuthor = 'Anonymous'
+				}; 
+				makeSheet(json.quoteText, json.quoteAuthor).prependTo($('#printer'));
+			})
+				.fail(function(json){
+				makeSheet('API error...', '...sorry :(').prependTo($('#printer'));
+			})
+				.always(function(json) {
+				//animation (same speed regardless of element height)
+				printSheet = $('.printer-slot > .quote-sheet:first-child');
+				printSheetHeight = parseInt(printSheet.css('height'));
+				printSheet.find('.quote').css('margin-top', -printSheetHeight - 10);
+				printSheet.find('.quote').animate({
 					marginTop: '20px'
-				}, printedQuoteHeight * 10, 'linear', function() {
-					printedQuote.addClass('draggable');
-					printerReady = true;
-				});
-				
-			}).fail(function(json){
-				$('<section class="quote-wrapper"><p class="quote">Api failure, try again? Maybe? I don\'t have quotes of my own :(...</p><p class="author">...halp?</p></section>').prependTo($('#printer'));
-				
-				printedQuote = $('.quote-wrapper:first-child');
-				printedQuoteHeight = parseInt(printedQuote.css('height'));
-				printedQuote.find('.quote').css('margin-top', -printedQuoteHeight - 10);
-				printedQuote.find('.quote').animate({
-					marginTop: '20px'
-				}, printedQuoteHeight * 10, 'linear', function() {
-					printedQuote.addClass('draggable');
-					printerReady = true;
+				}, printSheetHeight * 10, 'linear', function() {
+					printSheet.addClass('draggable');
+					printReady = true;
 				});
 			});
 		};
@@ -79,49 +89,72 @@ $('document').ready(function() {
 	
 	//DRAG AND DROP
 	$('body').on('mousedown', '.draggable', function(downEvent) {
-		var thisElement = $(this); 
-		var xOffset = thisElement.offset().left - downEvent.pageX + thisElement.width()/2;
-		var yOffset = thisElement.offset().top - downEvent.pageY + thisElement.height()/2;
+		downEvent.preventDefault();
+		var nearBox;
+		var draggedElement = $(this); 
+		var xOffset = draggedElement.offset().left - downEvent.pageX + draggedElement.width()/2;
+		var yOffset = draggedElement.offset().top - downEvent.pageY + draggedElement.height()/2;
 
 		//PICK
-		thisElement.css({
+		draggedElement.css({
 			position: 'absolute',
-			//change the width to fixed because it's gonna be moved out of the parent
-			width: thisElement.width(),
-			//set the position once on start to begin 'in hand'
-			left: downEvent.pageX - thisElement.width()/2 + xOffset,
-			top: downEvent.pageY - thisElement.height()/2 + yOffset
+			width: draggedElement.width(),
+			left: downEvent.pageX - draggedElement.width()/2 + xOffset,
+			top: downEvent.pageY - draggedElement.height()/2 + yOffset
 		});
 
-		thisElement.appendTo('body');
+		draggedElement.appendTo('body');
 		
 		//DRAG
-		$('body').on('mousemove', (function(moveEvent) {
-			thisElement.css({
-				left: moveEvent.pageX - thisElement.width()/2 + xOffset,
-				top: moveEvent.pageY - thisElement.height()/2 + yOffset
+		$('body').on('mousemove', function(moveEvent) {
+			var lastNearBox;
+			lastNearBox = isNearBox(draggedElement);
+			if (lastNearBox && draggedElement.hasClass('quote-sheet')) {
+				lastNearBox.find('.box-slot').css('background-color', '#ddd');	
+			} else {
+				$('.box .box-slot').css('background-color', '#555');
+			}
+			draggedElement.css({
+				left: moveEvent.pageX - draggedElement.width()/2 + xOffset,
+				top: moveEvent.pageY - draggedElement.height()/2 + yOffset
 			});
-		}));
+		});
 		
 		//DROP
-		$('body').mouseup(function(){
-			if (isNearBox(thisElement)) {
-				printedQuote = thisElement;
-				printedQuoteHeight = parseInt(printedQuote.css('height'));
-				printedQuote.find('.quote').css('margin-bottom', '20px');
+		$('body').on('mouseup', function(){
+			var nearBox = isNearBox(draggedElement);
+			
+			if (nearBox && draggedElement.hasClass('quote-sheet')) {
+				var nearBoxSlot = nearBox.find('.box-slot');
+				var nearBoxSlotPadding = parseInt(nearBoxSlot.css('padding'));					 
+				var draggedHeight = parseInt(draggedElement.css('height'));
 				
-				printedQuote.animate({
-					left: isNearBox(thisElement).find('.box-slot').offset().left + parseInt( isNearBox(thisElement).find('.box-slot').css('padding'), 10 ),
-					top: isNearBox(thisElement).find('.box-slot').offset().top - printedQuoteHeight + parseInt( isNearBox(thisElement).find('.box-slot').css('padding'), 10 )
+				draggedElement.find('.quote').css('margin-bottom', '20px');
+				draggedElement.animate({
+					left: nearBoxSlot.offset().left + nearBoxSlotPadding,
+					top: nearBoxSlot.offset().top + nearBoxSlotPadding - draggedHeight
 				}, 100, function(){
-					printedQuote.animate({
-						marginTop: printedQuoteHeight,
+					draggedElement.prependTo(nearBoxSlot);
+					draggedElement.css({
+						left: nearBoxSlotPadding,
+						top: nearBoxSlotPadding - draggedHeight
+					});
+					draggedElement.animate({
+						marginTop: draggedHeight,
 						height: 0
-					}, printedQuoteHeight * 10, 'linear', function() {
+					}, draggedHeight * 10, 'linear', function() {
+						if (nearBox.hasClass('box-twitter')) {
+																window.open('https://twitter.com/intent/tweet?text='
+																+$(this).find('.quote').text()
+																+'&url=https://spatzerny.github.io/fcc-quote',"myWindow","height=600,width=900",'modal=yes');
+																}
 						$(this).remove();
 					});
 				});
+				
 			};
+			
+			$('.box .box-slot').css('background-color', '#555');
 			$('body').off('mousemove');
 			$('body').off('mouseup');
 		});
@@ -133,24 +166,24 @@ $('document').ready(function() {
 	$('body').on('touchstart', '.draggable', function(downEvent) {
 		console.log(downEvent.originalEvent.changedTouches[0].pageX);
 		downEvent.preventDefault();
-		var thisElement = $(this); 
-		var xOffset = thisElement.offset().left - downEvent.originalEvent.changedTouches[0].pageX + thisElement.width()/2;
-		var yOffset = thisElement.offset().top - downEvent.originalEvent.changedTouches[0].pageY + thisElement.height()/2;
+		var draggedElement = $(this); 
+		var xOffset = draggedElement.offset().left - downEvent.originalEvent.changedTouches[0].pageX + draggedElement.width()/2;
+		var yOffset = draggedElement.offset().top - downEvent.originalEvent.changedTouches[0].pageY + draggedElement.height()/2;
 
-		thisElement.css({
+		draggedElement.css({
 			position: 'absolute',
-			width: thisElement.width(),
+			width: draggedElement.width(),
 			//change the left/top on start to begin 'in hand'
-			left: downEvent.originalEvent.changedTouches[0].pageX - thisElement.width()/2 + xOffset,
-			top: downEvent.originalEvent.changedTouches[0].pageY - thisElement.height()/2 + yOffset
+			left: downEvent.originalEvent.changedTouches[0].pageX - draggedElement.width()/2 + xOffset,
+			top: downEvent.originalEvent.changedTouches[0].pageY - draggedElement.height()/2 + yOffset
 		});
 
-		thisElement.appendTo('body');
+		draggedElement.appendTo('body');
 
 		$('body').on('touchmove', (function(moveEvent) {
-			thisElement.css({
-				left: moveEvent.originalEvent.changedTouches[0].pageX - thisElement.width()/2 + xOffset,
-				top: moveEvent.originalEvent.changedTouches[0].pageY - thisElement.height()/2 + yOffset
+			draggedElement.css({
+				left: moveEvent.originalEvent.changedTouches[0].pageX - draggedElement.width()/2 + xOffset,
+				top: moveEvent.originalEvent.changedTouches[0].pageY - draggedElement.height()/2 + yOffset
 			});
 		}));
 
