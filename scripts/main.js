@@ -1,5 +1,4 @@
 /*TODO
-highlighting for box input
 social media functionality
 starting positions of boxes
 change cursor on movement (to hand?)
@@ -43,15 +42,6 @@ function isNearBox(sheet) {
 	};
 };
 
-function makeQuoteSheet(json) {
-	if (!json.quoteAuthor) {
-		json.quoteAuthor = 'Anonymous'
-	}; 
-	return $('<section class="quote-sheet"><p class="quote">'
-					+ json.quoteText + '</p><p class="author">'
-					+ json.quoteAuthor + '</p></section>')
-}
-
 $('document').ready(function() {
 	
 	//PRINTER && PRINTER BUTTON
@@ -90,7 +80,6 @@ $('document').ready(function() {
 	//DRAG AND DROP
 	$('body').on('mousedown', '.draggable', function(downEvent) {
 		downEvent.preventDefault();
-		var nearBox;
 		var draggedElement = $(this); 
 		var xOffset = draggedElement.offset().left - downEvent.pageX + draggedElement.width()/2;
 		var yOffset = draggedElement.offset().top - downEvent.pageY + draggedElement.height()/2;
